@@ -1,22 +1,6 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
-# Parameters:
-#   ArtifactBucket:
-#     Type: String
-#     Description: Name of S3 bucket
 Resources:
-  HelloWorld:
-    Type: AWS::Lambda::Function
-    Properties:
-      FunctionName: HelloWorld
-      Handler: index.handler
-      Role: !GetAtt HelloWorldLambdaRole.Arn
-      # Code:
-      #   S3Bucket: !Sub ${ArtifactBucket}
-      #   S3Key: hello-world.zip
-      PackageType: Zip
-      Code: ./src/
-      Runtime: python3.12
   HelloWorldLambdaRole:
     Type: AWS::IAM::Role
     Properties:
@@ -30,7 +14,7 @@ Resources:
             - lambda.amazonaws.com
           Action:
           - sts:AssumeRole
-      Path: "/"
+      Path: /
       Policies:
       - PolicyName: AWSLambdaBasicExecutionRole
         PolicyDocument:
@@ -41,4 +25,12 @@ Resources:
             - logs:CreateLogGroup
             - logs:CreateLogStream
             - logs:PutLogEvents
-            Resource: "*"
+            Resource: '*'
+  HelloWorld:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: HelloWorld
+      Handler: ./src/index.handler
+      Role: !GetAtt HelloWorldLambdaRole.Arn
+      PackageType: Zip
+      Runtime: python3.12
