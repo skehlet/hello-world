@@ -1,11 +1,11 @@
 version: 0.2
 
-# env:
-#   variables:
-#     # The following env vars are set by the pipeline:
-#     # ARTIFACT_BUCKET
-#     # example:
-#     APP_PATH: "src"
+env:
+  variables:
+    # The following env vars are set by the pipeline:
+    # ARTIFACT_BUCKET
+    # example:
+    APP_PATH: "src"
 
 phases:
   # Use the install phase for build environment only dependencies.
@@ -30,7 +30,7 @@ phases:
       - find .
       # Run pylint on code
       - echo "[+] Running pylint"
-      - pylint || pylint-exit -efail $?
+      - pylint ${APP_PATH} || pylint-exit -efail $?
 
       # Run unit tests
       - echo "[+] Running unit tests"

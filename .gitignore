@@ -1,2 +1,3 @@
 .aws-sam
 outputTemplate.yml
+venv
