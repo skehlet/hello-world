@@ -11,7 +11,7 @@ phases:
   # Use the install phase for build environment only dependencies.
   install:
     runtime-versions:
-      python: 3.12
+      python: 3.x
     commands:
       - echo "[+] Installing dependencies"
       - pip install pylint pylint-exit
@@ -24,6 +24,10 @@ phases:
 
   pre_build:
     commands:
+      - echo "[+] ls -la"
+      - ls -la
+      - echo "[+] find ."
+      - find .
       # Run pylint on code
       - echo "[+] Running pylint"
       - pylint || pylint-exit -efail $?
