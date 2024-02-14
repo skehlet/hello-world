@@ -13,7 +13,11 @@ phases:
     runtime-versions:
       python: 3.x
     commands:
-      - echo "[+] Installing dependencies"
+      - echo "=== Files"
+      - find . -type f | sort
+      - echo "=== Env vars"
+      - env | sort
+      - echo "=== Installing dependencies"
       - pip install pylint pylint-exit
       # - pip3 install
       #   -r ${APP_PATH}/${HEALTH_FUNCTION_PATH}/requirements.txt
@@ -24,26 +28,21 @@ phases:
 
   pre_build:
     commands:
-      - echo "[+] ls -la"
-      - ls -la
-      - echo "[+] find ."
-      - find .
-      # Run pylint on code
-      - echo "[+] Running pylint"
+      - echo "=== Running pylint"
       - pylint ${APP_PATH} || pylint-exit -efail $?
 
       # Run unit tests
-      - echo "[+] Running unit tests"
+      - echo "=== Running unit tests"
       # - export COVERAGE_REPORT_PARAMETER="--cov-report xml:$CODEBUILD_SRC_DIR/$TESTS_PATH/coverage_reports/unit-coverage-report.xml"
       # - pytest --junitxml=$TEST_REPORT_DESTINATION $COVERAGE_REPORT_PARAMETER --cov=src ${TESTS_PATH}/unit
 
 
   build:
     commands:
-      - echo "[+] Building application"
+      - echo "=== Building application"
       - sam build
 
-      - echo "[+] Packaging application"
+      - echo "=== Packaging application"
       # - cp $INFRA_PATH/_config/*.json $PACKAGE_PATH
       - sam package
         --s3-bucket ${ARTIFACT_BUCKET}
