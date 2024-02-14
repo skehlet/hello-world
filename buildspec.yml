@@ -1,0 +1,49 @@
+version: 0.2
+
+env:
+  variables:
+    # The following env vars are set by the pipeline:
+    # ARTIFACT_BUCKET
+
+phases:
+  # Use the install phase for build environment only dependencies.
+  install:
+    runtime-versions:
+      python: 3.8
+    commands:
+      - echo "[+] Installing dependencies"
+      - pip3 install pylint pylint-exit
+      # - pip3 install
+      #   -r ${APP_PATH}/${HEALTH_FUNCTION_PATH}/requirements.txt
+      #   -r ${APP_PATH}/${VERSION_FUNCTION_PATH}/requirements.txt
+      #   -r ${APP_PATH}/${PATIENT_DEMOGRAPHICS_PRODUCER_FUNCTION}/requirements.txt
+      #   -r ${APP_PATH}/${PATIENT_DEMOGRAPHICS_CONSUMER_FUNCTION}/requirements.txt
+      #   -r ${TESTS_PATH}/requirements.txt
+
+  pre_build:
+    commands:
+      # Run pylint on code
+      - echo "[+] Running pylint"
+      - pylint || pylint-exit -efail $?
+
+      # Run unit tests
+      - echo "[+] Running unit tests"
+      # - export COVERAGE_REPORT_PARAMETER="--cov-report xml:$CODEBUILD_SRC_DIR/$TESTS_PATH/coverage_reports/unit-coverage-report.xml"
+      # - pytest --junitxml=$TEST_REPORT_DESTINATION $COVERAGE_REPORT_PARAMETER --cov=src ${TESTS_PATH}/unit
+
+
+  build:
+    commands:
+      - echo "[+] Building application"
+      - sam build
+
+      - echo "[+] Packaging application"
+      # - cp $INFRA_PATH/_config/*.json $PACKAGE_PATH
+      - sam package
+        --s3-bucket ${ARTIFACT_BUCKET}
+        --s3-prefix build-zip
+        --output-template-file outputTemplate.yml
+
+artifacts:
+  files:
+    - '**/*'
