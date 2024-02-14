@@ -1,16 +1,20 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  ArtifactBucket:
+    Type: String
+    Description: Name of S3 bucket
 Resources:
   HelloWorld:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: HelloWorld
-      Handler: lambda/index.handler
+      Handler: src/index.handler
       Role: !GetAtt HelloWorldLambdaRole.Arn
       Code:
-        S3Bucket: skehlet
+        S3Bucket: !Sub ${ArtifactBucket}
         S3Key: hello-world.zip
-      Runtime: nodejs18.x
+      Runtime: python3.x
   HelloWorldLambdaRole:
     Type: AWS::IAM::Role
     Properties:
