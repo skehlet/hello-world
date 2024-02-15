@@ -30,7 +30,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: HelloWorld
-      Handler: ./src/index.handler
+      Handler: src.index.handler
       Role: !GetAtt HelloWorldLambdaRole.Arn
       PackageType: Zip
       Runtime: python3.12
