@@ -95,8 +95,7 @@ Resources:
   CloudFormationRole:
     Type: "AWS::IAM::Role"
     Properties:
-      RoleName:
-        Fn::Sub: CloudFormationRole-${AWS::StackName}
+      RoleName: !Sub CloudFormationRole-${AWS::StackName}
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -272,6 +271,7 @@ Resources:
                   - "lambda:CreateFunction"
                   - "lambda:DeleteFunction"
                   - "lambda:UpdateFunctionConfiguration"
+                  - "lambda:UpdateFunctionCode"
                 Resource:
                   - !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:HelloWorld
 
@@ -471,7 +471,7 @@ Resources:
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
-                Version: 1
+                Version: "1"
                 Provider: CloudFormation
               OutputArtifacts:
                 - Name: CreatedProdChangeSet
@@ -501,7 +501,7 @@ Resources:
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
-                Version: 1
+                Version: "1"
                 Provider: CloudFormation
               Configuration:
                 ActionMode: CHANGE_SET_EXECUTE
